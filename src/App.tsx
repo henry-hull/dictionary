@@ -1,33 +1,43 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Button, Heading, Input, Text, HStack, Container } from '@chakra-ui/react'
+import { ChangeEvent, useState } from 'react'
+import { Words } from './types'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [word, setWord] = useState("")
+  const [definitions, setDefinitions] = useState<Words>([])
+
+  const invalid = word === ""
+
+  function handleChange(event: ChangeEvent<HTMLInputElement>): void {
+    setWord(event.target.value)
+  }
+
+  async function handleClick(): Promise<void> {
+    console.log({ word })
+    const url = `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`
+    try {
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+
+      const json = await response.json();
+      setDefinitions(json)
+      console.log(json);
+    } catch (error) {
+      console.error({error});
+    }
+  }
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h3>cheeseburger</h3>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1957999999924398572)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <Heading margin={10}>Dictionary</Heading>
+      <HStack margin={10}>
+        <Input placeholder='Enter Word' value={word} onChange={handleChange} />
+        <Button colorScheme='red' onClick={handleClick} isDisabled={invalid} >Go</Button>
+      </HStack>
+      {definitions.length>0&&
+      <Container>{definitions[0].meanings[0].definitions[0].definition}</Container>}
     </>
   )
 }
