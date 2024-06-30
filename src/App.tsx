@@ -1,4 +1,4 @@
-import { Button, Heading, Input, Text, HStack, Container } from '@chakra-ui/react'
+import { Button, Heading, Input, HStack, Container } from '@chakra-ui/react'
 import { ChangeEvent, useState } from 'react'
 import { Words } from './types'
 
