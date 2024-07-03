@@ -1,4 +1,4 @@
-import { Button, Heading, Input, HStack, Container, useToast } from '@chakra-ui/react'
+import { Button, Heading, Input, HStack, Container, useToast, VStack, Box } from '@chakra-ui/react'
 import { ChangeEvent, useState, KeyboardEvent } from 'react'
 import { Words } from './types'
 import { WordDefinition } from './WordDefinition'
@@ -51,9 +51,11 @@ function App() {
         <Button colorScheme='red' onClick={handleClick} isDisabled={invalid} >Go</Button>
       </HStack>
 
-      <Container>
-        {results.map(result => <WordDefinition word={result} />)}
-      </Container>
+      <Box maxW="2xl">
+        <VStack spacing={4}>
+          {results.map(result => <WordDefinition word={result} />)}
+        </VStack>
+      </Box>
     </>
   )
 }
