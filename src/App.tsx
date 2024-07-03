@@ -1,8 +1,9 @@
-import { Button, Heading, Input, HStack, Container } from '@chakra-ui/react'
-import { ChangeEvent, useState } from 'react'
+import { Button, Heading, Input, HStack, Container, useToast } from '@chakra-ui/react'
+import { ChangeEvent, useState, KeyboardEvent } from 'react'
 import { Words } from './types'
 
 function App() {
+  const toast = useToast()
   const [word, setWord] = useState("")
   const [definitions, setDefinitions] = useState<Words>([])
 
@@ -13,19 +14,31 @@ function App() {
   }
 
   async function handleClick(): Promise<void> {
-    console.log({ word })
     const url = `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`
     try {
       const response = await fetch(url);
       if (!response.ok) {
-        throw new Error(`Response status: ${response.status}`);
+        toast({
+          title: `"${word}" not found.`,
+          description: `Server response was ${response.status}`,
+          status: 'error',
+          duration: 9000,
+          isClosable: true,
+        });
+        return;
       }
 
       const json = await response.json();
       setDefinitions(json)
-      console.log(json);
     } catch (error) {
-      console.error({error});
+      console.error({ error });
+    }
+  }
+
+  function handleKeyDown(event: KeyboardEvent<HTMLInputElement>): void {
+    console.log(event)
+    if (event.keyCode === 13) {
+      handleClick()
     }
   }
 
@@ -33,11 +46,11 @@ function App() {
     <>
       <Heading margin={10}>Dictionary</Heading>
       <HStack margin={10}>
-        <Input placeholder='Enter Word' value={word} onChange={handleChange} />
+        <Input placeholder='Enter Word' value={word} onChange={handleChange} onKeyDown={handleKeyDown} />
         <Button colorScheme='red' onClick={handleClick} isDisabled={invalid} >Go</Button>
       </HStack>
-      {definitions.length>0&&
-      <Container>{definitions[0].meanings[0].definitions[0].definition}</Container>}
+      {definitions.length > 0 &&
+        <Container>{definitions[0].meanings[0].definitions[0].definition}</Container>}
     </>
   )
 }
