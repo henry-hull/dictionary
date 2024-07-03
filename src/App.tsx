@@ -1,11 +1,12 @@
 import { Button, Heading, Input, HStack, Container, useToast } from '@chakra-ui/react'
 import { ChangeEvent, useState, KeyboardEvent } from 'react'
 import { Words } from './types'
+import { WordDefinition } from './WordDefinition'
 
 function App() {
   const toast = useToast()
   const [word, setWord] = useState("")
-  const [definitions, setDefinitions] = useState<Words>([])
+  const [results, setResults] = useState<Words>([])
 
   const invalid = word === ""
 
@@ -29,7 +30,7 @@ function App() {
       }
 
       const json = await response.json();
-      setDefinitions(json)
+      setResults(json)
     } catch (error) {
       console.error({ error });
     }
@@ -49,8 +50,10 @@ function App() {
         <Input placeholder='Enter Word' value={word} onChange={handleChange} onKeyDown={handleKeyDown} />
         <Button colorScheme='red' onClick={handleClick} isDisabled={invalid} >Go</Button>
       </HStack>
-      {definitions.length > 0 &&
-        <Container>{definitions[0].meanings[0].definitions[0].definition}</Container>}
+
+      <Container>
+        {results.map(result => <WordDefinition word={result} />)}
+      </Container>
     </>
   )
 }

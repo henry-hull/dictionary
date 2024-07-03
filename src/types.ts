@@ -5,7 +5,7 @@ type Definition = {
     example: string
 }
 
-type Meaning = {
+export type Meaning = {
     partOfSpeech: string
     definitions: Definition[]
     synonyms: string[]
@@ -17,7 +17,7 @@ type License = {
     url: string
 }
 
-type Word = {
+export type Word = {
     word: string
     phonetics: Phonetic[]
     meanings: Meaning[]
@@ -25,7 +25,7 @@ type Word = {
     sourceUrls: string[]
 }
 
-type Phonetic = {
+export type Phonetic = {
     audio: string
     sourceUrl?: string
     license?: License
