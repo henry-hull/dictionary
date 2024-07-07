@@ -1,4 +1,4 @@
-import { Button, Heading, Input, HStack, Container, useToast, VStack, Box } from '@chakra-ui/react'
+import { Button, Heading, Input, HStack, useToast, VStack, Box } from '@chakra-ui/react'
 import { ChangeEvent, useState, KeyboardEvent } from 'react'
 import { Words } from './types'
 import { WordDefinition } from './WordDefinition'
